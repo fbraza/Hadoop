@@ -40,11 +40,11 @@ Distributed systems are:
 
 <p style='text-align: justify;'> The Hadoop distributed file system is the scalable, fault-tolerant file system for Hadoop. It is optimized to store very large amount of <b>immutable</b> data (<i>Write Once Read Many</i>) with files being typically accessed in long sequential scan. When storing data, HDFS breaks up a file into <i>blocks</i> of configurable size, usually 128MB and store <i>replicas</i> of each block on multiple servers ensuring data resilience and parallelism. Each worker node runs a deamon called a <b>DataNode</b> which accepts new block of data and write them to its local disks. The <b>DataNode</b> is only aware of blocks and their IDs: it does not have the knowledge about the file to which a particular block or replicate belongs. This information is hold by the <b>NameNode</b> which runs on the master servers and is responsible for maintaining a mapping of files to the blocks as well as metadata about the files themselves (names, permissions, attributes). All this data is saved in memory and is by definition non-persistent.</p>
 
-![Data_and_Name_nodes](https://github.com/fbraza/Hadoop/blob/master/Images_course_review/Name_and_Data_nodes.png)
+![Data_and_Name_nodes](Images_course_review/Name_and_Data_nodes.png)
 
 <p style='text-align: justify;'> It is also possible to run a <i>secondary NameNode</i> which despite its name does not act as the primary NameNode. Its main role is <b>to keep a copy of the File System image of the primary NameNode</b> which contains all details and metadata. This image is periodically built and updated by the <i>secondary NameNode</i> through interaction with the <i>JournalNodes</i> which contains all the logs related to the primary NameNode operations. The secondary NameNode runs on a separate machine as it requires CPU power and as much memory as the NameNode.</p>
 
-![Secondary_Name_Node](https://github.com/fbraza/Hadoop/blob/master/Images_course_review/Secondary_namenode.png)
+![Secondary_Name_Node](Images_course_review/Secondary_namenode.png)
 
 ### HDFS high availability
 
@@ -57,14 +57,14 @@ Distributed systems are:
 - We must ensure that only one NameNode is in active state to avoid any split / brain scenario (thank to *ZooKeeper*).
 - The standby also ensure the role of the secondary NameNode by taking periodic checkpoints of the active NameNode state.
 
-![High_availability](https://github.com/fbraza/Hadoop/blob/master/Images_course_review/ha_archi.png")
+![High_availability](Images_course_review/ha_archi.png")
 
 ### Practice with Labs
 
 <p style="text-align: justify">In the <i>practice with labs</i> section you will find a link toward some practice. The lab consists of a set of instructions that you can do by yourself or with help from the walk-through which is my solution for the lab. All the labs have been performed in the frame of the Data Engineering applied master proposed by the Data SicenceTech institute. These were possible with the help of a consulting company Adaltas which provided us access to a Hadoop cluster. If you do not have access to such service you can still follow the walk-through and these notes to get an idea about the way the Hadoop infrastructure and services work. The general setup for the lab looks as depicted in the figure below. We basically connect by SSH and through VPN to an <b>edge node</b> from which we can perfom local operations and send HDFS-related operations.</p>
 
 
-![Lab_setup](https://github.com/fbraza/Hadoop/blob/master/Images_course_review/lab_setup.png)
+![Lab_setup](Images_course_review/lab_setup.png)
 
 You can access the LAB1 [here]().
 
@@ -75,6 +75,6 @@ You can access the LAB1 [here]().
 
 <p style="text-align: justify"> Apache YARN (<b>Yet</b> <b>A</b>nother <b>R</b>esource <b>N</b>egotiator). is the cluster resource manager of Hadoop that was introduce in Hadoop 2. It provides an API to resquest and work with cluster resources. Nevertheless these API are abstracted from the user code. Instead a typical user will leverage some high-level APIs providing by some distributed frameworks that are built on top of YARN. Among others MapReduce, Spark, Tez or Hive are examples of computing frameworks running as YARN applications on the compute layer (provided by YARN) and the storage layer (provided by HDFS). <p style="text-align: justify">There is also a extra layer of applications that build on top of these frameworks. For example <i>Pig</i> and <i>Hive</i> run on MapReduce, Spark or Tez and don't directly interact with YARN.</p> 
 
-![YARN_applications](https://github.com/fbraza/Hadoop/blob/master/Images_course_review/yarn_applications.png")
+![YARN_applications](Images_course_review/yarn_applications.png")
 
 #### YARN 
