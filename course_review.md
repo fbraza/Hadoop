@@ -59,7 +59,7 @@ Distributed systems are:
 
 ![High_availability](Images_course_review/ha_archi.png)
 
-### Practice with Labs
+### HDFS: Practice with Labs
 
 <p style="text-align: justify">In the <i>practice with labs</i> section you will find a link toward some practice. The lab consists of a set of instructions that you can do by yourself or with help from the walk-through which is my solution for the lab. All the labs have been performed in the frame of the Data Engineering applied master proposed by the Data SicenceTech institute. These were possible with the help of a consulting company Adaltas which provided us access to a Hadoop cluster. If you do not have access to such service you can still follow the walk-through and these notes to get an idea about the way the Hadoop infrastructure and services work. The general setup for the lab looks as depicted in the figure below. We basically connect by SSH and through VPN to an <b>edge node</b> from which we can perfom local operations and send HDFS-related operations.</p>
 
@@ -77,7 +77,7 @@ You can access the LAB1 [here]().
 
 ![YARN_applications](Images_course_review/yarn_applications.png)
 
-#### Overview of YARN running
+### Overview of YARN running
 <p style="text-align: justify">In its core YARN provides two types of daemon: a <b>resource manager</b> (two by cluster in a stand-by configuration to ensure high availability) and several node managers. As indicated by its name the resource manager manages the use of resource across the cluster and the node managers launch and monitor <b>containers</b> where computations will happen. The figure below depicts possible scenarios when using YARN applications.</p>
 
 ![Anatomy_YARN_run](Images_course_review/overview_of_yarn.png)
@@ -91,6 +91,20 @@ You can access the LAB1 [here]().
 4. YARN has a flexible model for resource allocation but basically a request will:
 	- *Express the amount of computer resource required for each containers*
 	- *Express locality constraints meaning that containers should be run as close as possible from the data to be processed*
-	- *Request are queued for multiple users which ensure YARN multi-tenancy*
+	- *Because RAM and CPU are the limiting factors in distributed  YARN can **queue** the request and manage the ressource accordingly*
+	- *If one of the request suddenly needs 100% of the ressources it will kill all other processes finish this task and return to the other ones.*
 
 5. Once negotiation is done. The resource manager look for additional nodes to launch containers **(5)**
+
+### MapReduce
+
+<p style="text-align: justify"><b>MapReduce</b> is a programming model for data processing. Hadoop can run programs written in various languages (Python, Ruby Java ...). MapReduce programs are inherently parallel. It works by breaking down the data processing into two main phases: **map** and **reduce**. Each phase has **key-value pairs** as input and output. Their types is chosen by the programmer. <code>map()</code> and <code>reduce()</code></p>.
+
+### Overview of a MapReduce job
+<p style="text-align: justify">A <b>MapReduce job</b> is a unit of work that the client wants to perform and is composed of (i) the input data, (ii) MapReduce and (iii) some configuration. Hadoop runs the job by splitting it into two main tasks: the <b>map</b> and the <b>reduce</b>. These tasks are scheduled using YARN and run in the cluster nodes (remember the containers !).</p>
+
+<p style="text-align: justify"> Hadoop splits the input into several chunks. To each chunk is associated a <b>map</b> task. For each job a good split size should be around the size of a block (around 128MB). if splits are too small you may overload the process and managing all the map tasks might become tedious. In respect to <b>data locality</b> Hadoop will do its best to run the tasks where the data reside. Map tasks are written on the local disk not on HDFS. This is because map outputs are intermediary data that will be processed by the reduced tasks. When all the job is done, the data produced by the map tasks be removed. So storing it in HDFS (which implies the replication of this data) sounds like an overkill.</p>
+
+<p style="text-align: justify">Reduce tasks do not take advantage of data locality. Indeed the input for a reduce task is normally the <b>merged</b>, <b>shuffled</b> and <b>sorted</b> output of all the mappers. The output fo the reduce task is saved on HDFS for reliability. A typical workflow of this process is depicted in the figure below.</p>
+
+![MapReduce](Images_course_review/MapReduce.png)
