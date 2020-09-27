@@ -40,9 +40,7 @@ Distributed systems are:
 
 <p style='text-align: justify;'> The Hadoop distributed file system is the scalable, fault-tolerant file system for Hadoop. It is optimized to store very large amount of <b>immutable</b> data (<i>Write Once Read Many</i>) with files being typically accessed in long sequential scan. When storing data, HDFS breaks up a file into <i>blocks</i> of configurable size, usually 128MB and store <i>replicas</i> of each block on multiple servers ensuring data resilience and parallelism. Each worker node runs a deamon called a <b>DataNode</b> which accepts new block of data and write them to its local disks. The <b>DataNode</b> is only aware of blocks and their IDs: it does not have the knowledge about the file to which a particular block or replicate belongs. This information is hold by the <b>NameNode</b> which runs on the master servers and is responsible for maintaining a mapping of files to the blocks as well as metadata about the files themselves (names, permissions, attributes). All this data is saved in memory and is by definition non-persistent.</p>
 
-![](/home/fbraza/Insync/faouzi.brazza@gmail.com/Google Drive/02-DSTI-Master/11-BigData/Images_course_review/Name_and_Data_nodes.png)
-
-
+<img src="Images_course_review/Name_and_Data_nodes.png" alt="Name and Data Nodes" style="zoom:67%;" />
 
 <p style='text-align: justify;'> It is also possible to run a <i>secondary NameNode</i> which despite its name does not act as the primary NameNode. Its main role is <b>to keep a copy of the File System image of the primary NameNode</b> which contains all details and metadata. This image is periodically built and updated by the <i>secondary NameNode</i> through interaction with the <i>JournalNodes</i> which contains all the logs related to the primary NameNode operations. The secondary NameNode runs on a separate machine as it requires CPU power and as much memory as the NameNode.</p>
 
@@ -59,15 +57,14 @@ Distributed systems are:
 - We must ensure that only one NameNode is in active state to avoid any split / brain scenario (thank to *ZooKeeper*).
 - The standby also ensure the role of the secondary NameNode by taking periodic checkpoints of the active NameNode state.
 
-![](/home/fbraza/Insync/faouzi.brazza@gmail.com/Google Drive/02-DSTI-Master/11-BigData/Images_course_review/ha_archi.png)
-
-
+<img src="Images_course_review/ha_archi.png" alt="High Availability Architecture" style="zoom:67%;" />
 
 ### Practice with Labs
 
 <p style="text-align: justify">In the <i>practice with labs</i> section you will find a link toward some practice. The lab consists of a set of instructions that you can do by yourself or with help from the walk-through which is my solution for the lab. All the labs have been performed in the frame of the Data Engineering applied master proposed by the Data SicenceTech institute. These were possible with the help of a consulting company Adaltas which provided us access to a Hadoop cluster. If you do not have access to such service you can still follow the walk-through and these notes to get an idea about the way the Hadoop infrastructure and services work. The general setup for the lab looks as depicted in the figure below. We basically connect by SSH and through VPN to an <b>edge node</b> from which we can perfom local operations and send HDFS-related operations.</p>
 
-![](/home/fbraza/Insync/faouzi.brazza@gmail.com/Google Drive/02-DSTI-Master/11-BigData/Images_course_review/lab_setup.png)
+
+<img src="Images_course_review/lab_setup.png" alt="Lab Setup" style="zoom:67%;" />
 
 You can access the LAB1 [here]().
 
