@@ -57,7 +57,7 @@ Distributed systems are:
 - We must ensure that only one NameNode is in active state to avoid any split / brain scenario (thank to *ZooKeeper*).
 - The standby also ensure the role of the secondary NameNode by taking periodic checkpoints of the active NameNode state.
 
-![High_availability](Images_course_review/ha_archi.png")
+![High_availability](Images_course_review/ha_archi.png)
 
 ### Practice with Labs
 
@@ -75,6 +75,22 @@ You can access the LAB1 [here]().
 
 <p style="text-align: justify"> Apache YARN (<b>Yet</b> <b>A</b>nother <b>R</b>esource <b>N</b>egotiator). is the cluster resource manager of Hadoop that was introduce in Hadoop 2. It provides an API to resquest and work with cluster resources. Nevertheless these API are abstracted from the user code. Instead a typical user will leverage some high-level APIs providing by some distributed frameworks that are built on top of YARN. Among others MapReduce, Spark, Tez or Hive are examples of computing frameworks running as YARN applications on the compute layer (provided by YARN) and the storage layer (provided by HDFS). <p style="text-align: justify">There is also a extra layer of applications that build on top of these frameworks. For example <i>Pig</i> and <i>Hive</i> run on MapReduce, Spark or Tez and don't directly interact with YARN.</p> 
 
-![YARN_applications](Images_course_review/yarn_applications.png")
+![YARN_applications](Images_course_review/yarn_applications.png)
 
-#### YARN 
+#### Overview of YARN running
+<p style="text-align: justify">In its core YARN provides two types of daemon: a <b>resource manager</b> (two by cluster in a stand-by configuration to ensure high availability) and several node managers. As indicated by its name the resource manager manages the use of resource across the cluster and the node managers launch and monitor <b>containers</b> where computations will happen. The figure below depicts possible scenarios when using YARN applications.</p>
+
+![Anatomy_YARN_run](Images_course_review/overview_of_yarn.png)
+
+1. To run an application the client will contact the ressource manager **(1)** an ask it to run an *application master* process **(2)**.
+2. The resource manager finds a node manager that can launch the application master in a container **(3)**.
+3. What the application master does once it is running depends on the YARN application:
+	- *It could simply run a computation in the current container and return the result*
+	- *Or it could request more resources for more containers to perform distributed computations.*
+	- *For the latter we have a step of resource negotiation that starts with the resource manager.* **(4)**
+4. YARN has a flexible model for resource allocation but basically a request will:
+	- *Express the amount of computer resource required for each containers*
+	- *Express locality constraints meaning that containers should be run as close as possible from the data to be processed*
+	- *Request are queued for multiple users which ensure YARN multi-tenancy*
+
+5. Once negotiation is done. The resource manager look for additional nodes to launch containers **(5)**
