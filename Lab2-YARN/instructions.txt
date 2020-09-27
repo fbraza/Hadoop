@@ -1,0 +1,13 @@
+Example jar is
+--------------
+
+-  "/usr/hdp/current/hadoop-mapreduce-client/hadoop-mapreduce-examples.jar"
+-  Use the "yarn jar /usr/hdp/current/hadoop-mapreduce-client/hadoop-mapreduce-examples.jar pi" commands, with parameters.
+- Optional: to be able to see the YARN URLs, you need to be authenticated on your computer. 
+
+See this article, for Windows and Firefox: 
+https://www.adaltas.com/en/2019/11/04/windows-krb5-client-spnego/
+
+Map Reduce with Python
+yarn jar /usr/hdp/current/hadoop-mapreduce-client/hadoop-streaming.jar -file wordcount/mapper.py -mapper "python mapper.py" 
+-file wordcount/reducer.py -reducer "python reducer.py" -input data/alice.txt -output output/wordcount

@@ -1,0 +1,54 @@
+- Create a folder "drivers" in your HDFS Home
+- Get the "drivers.csv" files located at
+    -> /data/drivers/drivers.csv
+    
+- Connect to Hive
+beeline -u "jdbc:hive2://zoo-1.au.adaltas.cloud:2181,zoo-2.au.adaltas.cloud:2181,zoo-3.au.adaltas.cloud:2181/dsti;serviceDiscoveryMode=zooKeeper;zooKeeperNamespace=hiveserver2;"
+
+- use dsti-2020-fall-1
+0: jdbc:hive2://zoo-1.au.adaltas.cloud:2181,z> use dsti;
+
+- Create both tables
+- Check the table pointing
+
+
+Column name:
+driverId  : INTEGER
+name      : STRING 
+ssn       : INTEGER
+location, : STRING
+certified : STRING
+wage-plan : STRING
+
+CREATE EXTERNAL TABLE IF NOT EXISTS faouzi_drivers_csv
+    (
+        DriverId  STRING,
+        Name      STRING,
+        Ssn       INT,
+        Location  STRING,
+        Certified CHAR(1),
+        Wageplan STRING
+     )
+    ROW FORMAT DELIMITED
+    FIELDS TERMINATED BY ','
+    STORED AS TEXTFILE
+    LOCATION 'Data/drivers'
+    tblproperties ("skip.header.line.count"="1");
+    
+    
+CREATE TABLE IF NOT EXISTS faouzi_drivers_ocr
+    (
+        DriverId  STRING,
+        Name      STRING,
+        Ssn       INT,
+        Location  STRING,
+        Certified CHAR(1),
+        Wageplan STRING
+     )
+    ROW FORMAT DELIMITED
+    FIELDS TERMINATED BY ','
+    STORED AS ORC
+    LOCATION 'Data/drivers_ocr';
+
+
+Data/queries/test_query.hql
