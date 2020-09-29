@@ -101,7 +101,7 @@ You can access the LAB1 [here]().
 
 ### MapReduce
 
-<p style="text-align: justify"><b>MapReduce</b> is a programming model for data processing. Hadoop can run programs written in various languages (Python, Ruby Java ...). MapReduce programs are inherently parallel. It works by breaking down the data processing into two main phases: **map** and **reduce**. Each phase has **key-value pairs** as input and output. Their types is chosen by the programmer. <code>map()</code> and <code>reduce()</code></p>.
+<p style="text-align: justify"><b>MapReduce</b> is a programming model for data processing. Hadoop can run programs written in various languages (Python, Ruby Java ...). MapReduce programs are inherently parallel. It works by breaking down the data processing into two main phases: **map** and **reduce**. Each phase has **key-value pairs** as input and output. Their types is chosen by the programmer.</p>
 
 ### Overview of a MapReduce job
 <p style="text-align: justify">A <b>MapReduce job</b> is a unit of work that the client wants to perform and is composed of (i) the input data, (ii) MapReduce and (iii) some configuration. Hadoop runs the job by splitting it into two main tasks: the <b>map</b> and the <b>reduce</b>. These tasks are scheduled using YARN and run in the cluster nodes (remember the containers !).</p>
@@ -111,3 +111,39 @@ You can access the LAB1 [here]().
 <p style="text-align: justify">Reduce tasks do not take advantage of data locality. Indeed the input for a reduce task is normally the <b>merged</b>, <b>shuffled</b> and <b>sorted</b> output of all the mappers. The output fo the reduce task is saved on HDFS for reliability. A typical workflow of this process is depicted in the figure below.</p>
 
 ![MapReduce](Images_course_review/MapReduce.png)
+
+### MapReduce: Practice with Labs
+
+<p style="text-align: justify">In this lab we will process the file we downloaded during Lab1 and apply some MapReduce algorithms to (i) count all words in the file and (ii) find the most representative word of this file. The algorithm will be implemented in both Python and Ruby.</p>
+
+## Hadoop applications
+
+<p style="text-align: justify">In the next sections we will describe and work with some of the most useful applications that sit on top of the Hadoop core components.</p> 
+
+### Hive
+
+<p style="text-align: justify">In normal use, Hive converts SQL queries (HiveQL) into a series of MapReduce jobs. Hive organized data into tables, which allows to attach structure or schemas to data stored on HDFS. Hive also saves and generates metadata (including the schema) that are stored in a database called the <b>metastore</b>. Hive can handle a large spectrum of files as semi-structured data (e.g., CSV, JSON ...), sequence files (designed for large-scale processing), columnar file or HBase tables.</p>
+
+<p style="text-align: justify">Hive is optimized for <i>analytical</i> processing (OLAP) and not for <i>transactional</i> processing (OLTP). OLTP is typically the type of processing that happens between a website and its database. The website needs to connect regularly to the database to get data, update it, insert new fields and so on. In contrast to this and given the fact that Hive harnesses the MapReduce algorithm to process HQL queries, its proper use should be related to data analytics. It makes total sense since data analysis related queries directly deals with columns (i.e., reduce an entire column to an average, sort a column, get maximum ...). These types of queries also fit perfectly with the mapReduce design. To go even further and enforce this aspect Hive is preferably used with some specific columnar file like the ORCFile (<i>Optimized Record Columnar File</i>).</p>
+
+### Anatomy of Hive
+
+![Hive](Images_course_review/hive_anatomy.png)
+
+### Tables in Hive
+ <p style="text-align: justify">A Hive table is made up of the data being stored and the associated metadata describing the layout of the data in the table. The data typically resides in HDFS. Hive stores the metadata in a relational database (metastore) and not in HDFS.</p>
+ <p style="text-align: justify">By default, newly created tables will be managed by Hive meaning that Hive will move the data into its warehouse directory: this is a called a <b>managed table</b>(`CREATE TABLE ...`). Alternatively, we can create an <b>external table</b> which tells Hive to refer to data that exists at a defined location on HDFS so, outside the warehouse 
+ directory (`CREATE EXTERNAL TABLE ...`).</p>
+ >When creating tables we need to specify the location of the data. Keep in mind that you need to specify the location of the folder where lies your data not the file itself.
+ 
+ <p style="text-align: justify">The workflow we saw in class was the following. If no restriction use external tables. As such they can be available for other Hadoop applications. To create the table you first need to read the data from your file (for example csv) and load it into a intermediary table. Once done you need to transfer the data into the final table that will be stored on the right format for future queries (ORCFile for Hive). More on this subject in the first Hive's Lab.</p>
+ 
+ ### Partition and buckets
+ <p style="text-align: justify">Hive can organize tables into partitions. It is a way of dividing a table based on the value of a partition column, such as data, country name or a category. Using partition can speed up queries.</p>
+ 
+ ```sql
+ ￼CREATE TABLE ...
+ PARTITIONED BY <your condition>
+ ```
+ 
+ <p style="text-align: justify">Tables or partitions may be subdivided further into buckets to give more structure to the data that may be used for more efficient and specific queries. Additionally buckets are particularly useful if we want to create smaller samples of a big data set to perform sampling of our data instead of querying the whole.</p> 
